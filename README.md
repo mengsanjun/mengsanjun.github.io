@@ -2,4 +2,4 @@
 
 主题采用 [polar bear](https://github.com/frostfan/hexo-theme-polarbear).  
 
-通过阿里云申请域名已绑定：(https://wwww.clclcl.fun/)[https://clclcl.fun/]  
+通过阿里云申请域名已绑定：[https://www.clclcl.fun/](https://clclcl.fun/) 
