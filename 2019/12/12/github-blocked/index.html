@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="如何解决github/amazonaws访问不了的问题"/>
+
+
+
+
+  <meta name="keywords" content="github,DNS检测," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Hope You Never Grow Old">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://clclcl.fun/2019/12/12/github-blocked/"/>
+
+
+<meta name="description" content="如何解决github&#x2F;amazonaws访问不了的问题缘起：github.githubassets.com,github-cloud.s3.amazonaws.com,s3.amazonaws.com 等站点无法访问。其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。 同样的问题如其他某些站点，stackoverflow.com 使用的CDN地址访问失">
+<meta name="keywords" content="github,DNS检测">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何解决github&#x2F;amazonaws访问不了的问题">
+<meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2019&#x2F;12&#x2F;12&#x2F;github-blocked&#x2F;">
+<meta property="og:site_name" content="Hope You Never Grow Old">
+<meta property="og:description" content="如何解决github&#x2F;amazonaws访问不了的问题缘起：github.githubassets.com,github-cloud.s3.amazonaws.com,s3.amazonaws.com 等站点无法访问。其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。 同样的问题如其他某些站点，stackoverflow.com 使用的CDN地址访问失">
+<meta property="og:locale" content="cn">
+<meta property="og:updated_time" content="2019-12-16T02:51:38.000Z">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 如何解决github/amazonaws访问不了的问题 - Hope You Never Grow Old </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Hope You Never Grow Old</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="mailto:hi@clclcl.fun">
+                            
+                            
+                                Email
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                <a id="high-header" style="cursor:pointer"> High一下</a>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          如何解决github/amazonaws访问不了的问题
+        
+      </h1>
+
+      <time class="post-time">
+          Dec 12 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h1 id="如何解决github-amazonaws访问不了的问题"><a href="#如何解决github-amazonaws访问不了的问题" class="headerlink" title="如何解决github/amazonaws访问不了的问题"></a>如何解决github/amazonaws访问不了的问题</h1><h2 id="缘起："><a href="#缘起：" class="headerlink" title="缘起："></a><strong>缘起：</strong></h2><p><code>github.githubassets.com</code>,<code>github-cloud.s3.amazonaws.com</code>,<code>s3.amazonaws.com</code> 等站点无法访问。<br>其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。</p>
+<p>同样的问题如其他某些站点，<code>stackoverflow.com</code> 使用的CDN地址访问失败等。</p>
+<h2 id="思路："><a href="#思路：" class="headerlink" title="思路："></a><strong>思路：</strong></h2><p><strong>解决这种问题的前提是，GFW没有墙你要访问的网站。如工信部黑名单中的<code>i.stack.imgur.com</code>是怎么也不行的，除非你用代理或者VPN :)</strong><br>这种问题一般是因为域名解析的问题，比如有一些电信的一些DNS就解析不了aws的域名，或者解析到一个访问不了的IP （一个域名往往对应多个IP地址）。  </p>
+<h3 id="解决方案1：可以换一个DNS服务器。"><a href="#解决方案1：可以换一个DNS服务器。" class="headerlink" title="解决方案1：可以换一个DNS服务器。"></a>解决方案1：可以换一个DNS服务器。</h3><pre><code>如设置DNS为8.8.8.8，谷歌的服务器。  </code></pre><p><strong>缺点</strong>: 仍可能解析到某一个不可达的IP地址，若经常访问国内站点的话，又远不如运营商提供的服务器，异或一些大公司内部有自己的DNS。这种方案简单粗暴，但不一定合适或有用，视自己情况而定。</p>
+<h3 id="解决方案2：本地解析"><a href="#解决方案2：本地解析" class="headerlink" title="解决方案2：本地解析"></a>解决方案2：本地解析</h3><p>通过DNS解析结果，本地设置域名/IP解析，不走DNS。<br>步骤：</p>
+<ul>
+<li>通过<a href="http://tool.chinaz.com/dns" target="_blank" rel="noopener">站长工具</a> / <a href="https://www.17ce.com/" target="_blank" rel="noopener">一起测17CE</a> / <a href="https://zijian.aliyun.com/?spm=a2c1d.8251892.content.11.7c275b76cItuki#/domainDetect" target="_blank" rel="noopener">阿里云DNS检测</a> 等，解析出DNS对应的所有IP地址，选择TTL较小的记录。</li>
+<li>修改hosts文件，windows在<code>C:\Windows\System32\drivers\etc\hosts</code>, Linux在 <code>/etc/hosts</code>,</li>
+<li>添加域名-IP记录，如<code>52.216.184.29 s3.amazonaws.com</code></li>
+<li>如果仍然不能访问，可以从DNS解析结果里更换一个IP地址试试。</li>
+<li>也可以把DNS解析出来的IP都试试，选择一个速度较快的节点。</li>
+</ul>
+<h2 id="附几个站点的可用IP："><a href="#附几个站点的可用IP：" class="headerlink" title="附几个站点的可用IP："></a>附几个站点的可用IP：</h2><p><strong>说明: 2019-12-11 验证有效。</strong></p>
+<p>185.199.109.154 github.githubassets.com<br>151.101.184.133 avatars1.githubusercontent.com<br>52.216.105.11 github-cloud.s3.amazonaws.com<br>52.216.184.29 s3.amazonaws.com<br>192.30.253.118 gist.github.com  </p>
+<p><strong>参考链接：</strong><br><a href="http://tool.chinaz.com/dns" target="_blank" rel="noopener">【++<strong>DNS工具</strong>： 站长工具-DNS查询++】</a>，同时返回多个DNS服务器的解析结果</p>
+<p><a href="https://www.17ce.com/" target="_blank" rel="noopener">【++<strong>DNS工具</strong>：一起测17CE++】</a>，功能非常多，ping、dig、CND测试等等都有。</p>
+<p><a href="https://zijian.aliyun.com/?spm=a2c1d.8251892.content.11.7c275b76cItuki#/domainDetect" target="_blank" rel="noopener">【++<strong>DNS工具</strong>：阿里云-DNS检测页面++】</a>  ，可以检测是否被工信部拉黑</p>
+<p><a href="https://blog.csdn.net/qq_20226441/article/details/82787448?utm_source=blogxgwz6" target="_blank" rel="noopener">【++s3.amazonaws.com github.com拒绝了我们的连接请求-&gt;解决方案】++</a></p>
+<p><a href="https://www.jianshu.com/p/5b72495f4548" target="_blank" rel="noopener">【++github.com 拒绝了我们的连接请求——解决方法++】</a></p>
+<p><a href="https://www.zhihu.com/question/20732532/answer/138683232" target="_blank" rel="noopener">【++GitHub 在国内无法访问之后，如何自救？ - 知乎用户的回答 - 知乎++】</a></p>
+<p><a href="https://www.jianshu.com/p/54011c07b4a9" target="_blank" rel="noopener">【++github排版混乱的解决方法++】</a><br><a href="https://www.cnblogs.com/ryans/p/8196151.html" target="_blank" rel="noopener">【gist.github.com 被墙无法访问解决办法】</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/github/">github</a>
+		  
+			<a href="/tags/DNS%E6%A3%80%E6%B5%8B/">DNS检测</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/12/06/hello-world/">
+        <span class="next-text nav-default">Hexo Start Quickly.</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">Unclear Meng.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear" target="_blank" rel="noopener">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+    
+<script type="text/javascript" src="/resource/high.js?v=1.1"></script>
+
+  </body>
+</html>
