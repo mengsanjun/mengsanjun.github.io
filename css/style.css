@@ -862,13 +862,17 @@ h6 {
   border-top: 1px solid #e1e1e1;
   color: #aaa;
   font-size: 14px;
+  font-style: italic;
   max-width: 1000px;
   display: block;
   overflow: hidden; }
   #colophon a {
-    color: #aaa; }
+    color: RGB(34, 138, 34); }
   #colophon .footer-author {
     margin: 0 4px; }
+  #colophon :link {
+    text-decoration: none;
+    border-bottom: 1px dotted #ccc; }
 
 .archive {
   margin: 2em 0px;
