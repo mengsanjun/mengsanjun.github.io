@@ -35,13 +35,13 @@
 <link rel="canonical" href="https://clclcl.fun/2019/12/12/github-blocked/"/>
 
 
-<meta name="description" content="如何解决github&#x2F;amazonaws访问不了的问题缘起：github.githubassets.com,github-cloud.s3.amazonaws.com,s3.amazonaws.com 等站点无法访问。其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。 同样的问题如其他某些站点，stackoverflow.com 使用的CDN地址访问失">
+<meta name="description" content="缘起：github.githubassets.com,github-cloud.s3.amazonaws.com,s3.amazonaws.com 等站点无法访问。其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。 同样的问题如其他某些站点，stackoverflow.com 使用的CDN地址访问失败等。 思路：解决这种问题的前提是，GFW没有墙你要访">
 <meta name="keywords" content="github,DNS检测">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何解决github&#x2F;amazonaws访问不了的问题">
 <meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2019&#x2F;12&#x2F;12&#x2F;github-blocked&#x2F;">
 <meta property="og:site_name" content="Hope You Never Grow Old">
-<meta property="og:description" content="如何解决github&#x2F;amazonaws访问不了的问题缘起：github.githubassets.com,github-cloud.s3.amazonaws.com,s3.amazonaws.com 等站点无法访问。其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。 同样的问题如其他某些站点，stackoverflow.com 使用的CDN地址访问失">
+<meta property="og:description" content="缘起：github.githubassets.com,github-cloud.s3.amazonaws.com,s3.amazonaws.com 等站点无法访问。其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。 同样的问题如其他某些站点，stackoverflow.com 使用的CDN地址访问失败等。 思路：解决这种问题的前提是，GFW没有墙你要访">
 <meta property="og:locale" content="cn">
 <meta property="og:updated_time" content="2019-12-16T02:51:38.000Z">
 <meta name="twitter:card" content="summary">
@@ -146,7 +146,7 @@
 
     
             <div class="post-content">
-            <h1 id="如何解决github-amazonaws访问不了的问题"><a href="#如何解决github-amazonaws访问不了的问题" class="headerlink" title="如何解决github/amazonaws访问不了的问题"></a>如何解决github/amazonaws访问不了的问题</h1><h2 id="缘起："><a href="#缘起：" class="headerlink" title="缘起："></a><strong>缘起：</strong></h2><p><code>github.githubassets.com</code>,<code>github-cloud.s3.amazonaws.com</code>,<code>s3.amazonaws.com</code> 等站点无法访问。<br>其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。</p>
+            <h2 id="缘起："><a href="#缘起：" class="headerlink" title="缘起："></a><strong>缘起：</strong></h2><p><code>github.githubassets.com</code>,<code>github-cloud.s3.amazonaws.com</code>,<code>s3.amazonaws.com</code> 等站点无法访问。<br>其中amazone站点主要是github及一些仓库发布软件包使用，我们在下载时往往会跳转到这里。</p>
 <p>同样的问题如其他某些站点，<code>stackoverflow.com</code> 使用的CDN地址访问失败等。</p>
 <h2 id="思路："><a href="#思路：" class="headerlink" title="思路："></a><strong>思路：</strong></h2><p><strong>解决这种问题的前提是，GFW没有墙你要访问的网站。如工信部黑名单中的<code>i.stack.imgur.com</code>是怎么也不行的，除非你用代理或者VPN :)</strong><br>这种问题一般是因为域名解析的问题，比如有一些电信的一些DNS就解析不了aws的域名，或者解析到一个访问不了的IP （一个域名往往对应多个IP地址）。  </p>
 <h3 id="解决方案1：可以换一个DNS服务器。"><a href="#解决方案1：可以换一个DNS服务器。" class="headerlink" title="解决方案1：可以换一个DNS服务器。"></a>解决方案1：可以换一个DNS服务器。</h3><pre><code>如设置DNS为8.8.8.8，谷歌的服务器。  </code></pre><p><strong>缺点</strong>: 仍可能解析到某一个不可达的IP地址，若经常访问国内站点的话，又远不如运营商提供的服务器，异或一些大公司内部有自己的DNS。这种方案简单粗暴，但不一定合适或有用，视自己情况而定。</p>
@@ -186,6 +186,12 @@
         
         
   <nav class="post-nav">
+    
+      <a class="prev" href="/2019/12/23/aaron_swartz/%E8%AE%A9%E4%BD%A0%E6%B4%BB%E5%BE%97%E6%9B%B4%E4%B9%85%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">让你活得更久的几个小知识</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
     
     
       <a class="next" href="/2019/12/06/hello-world/">
