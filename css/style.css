@@ -168,13 +168,14 @@ figure {
 /**
  * Address differences between Firefox and other browsers.
  */
+/*
 hr {
-  margin-top: 52px;
-  margin-bottom: 42px;
-  display: block;
-  border: 0;
-  text-align: center; }
-
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: block;
+    text-align: center;
+}
+*/
 /**
  * Contain overflow in all browsers.
  */
