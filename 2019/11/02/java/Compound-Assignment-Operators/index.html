@@ -12,7 +12,7 @@
 
 
 
-  <meta name="description" content="Compound Assignment Operators"/>
+  <meta name="description" content="Java复合赋值运算符(Compound Assignment Operators)"/>
 
 
 
@@ -30,17 +30,17 @@
 
 
 
-<link rel="canonical" href="https://clclcl.fun/2019/11/02/Compound-Assignment-Operators/"/>
+<link rel="canonical" href="https://clclcl.fun/2019/11/02/java/Compound-Assignment-Operators/"/>
 
 
-<meta name="description" content="首先看一段代码： 1int i &#x3D; 10;2long j &#x3D; 100;3i &#x3D; i + j; &#x2F;&#x2F;compiling error: incompatible types: possible lossy conversion from long to int4i +&#x3D; j; &#x2F;&#x2F;correct.5System.out.println(i); 很多人（包括我自己）都简单的把 i +&#x3D; j 理解为 i">
+<meta name="description" content="简单介绍Java复合赋值运算符（+&#x3D; -&#x3D; *&#x3D; &#x2F;+ &amp;gt;&#x3D; &amp;gt;&amp;gt;&amp;gt;&#x3D; |&#x3D; &amp;amp;&#x3D;）中的类型转换。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Compound Assignment Operators">
-<meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2019&#x2F;11&#x2F;02&#x2F;Compound-Assignment-Operators&#x2F;">
+<meta property="og:title" content="Java复合赋值运算符(Compound Assignment Operators)">
+<meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2019&#x2F;11&#x2F;02&#x2F;java&#x2F;Compound-Assignment-Operators&#x2F;">
 <meta property="og:site_name" content="Hope You Never Grow Old">
-<meta property="og:description" content="首先看一段代码： 1int i &#x3D; 10;2long j &#x3D; 100;3i &#x3D; i + j; &#x2F;&#x2F;compiling error: incompatible types: possible lossy conversion from long to int4i +&#x3D; j; &#x2F;&#x2F;correct.5System.out.println(i); 很多人（包括我自己）都简单的把 i +&#x3D; j 理解为 i">
+<meta property="og:description" content="简单介绍Java复合赋值运算符（+&#x3D; -&#x3D; *&#x3D; &#x2F;+ &amp;gt;&#x3D; &amp;gt;&amp;gt;&amp;gt;&#x3D; |&#x3D; &amp;amp;&#x3D;）中的类型转换。">
 <meta property="og:locale" content="cn">
-<meta property="og:updated_time" content="2019-12-06T03:04:16.733Z">
+<meta property="og:updated_time" content="2020-01-07T06:28:47.289Z">
 <meta name="twitter:card" content="summary">
 
 
@@ -66,7 +66,7 @@
 
 
 
-    <title> Compound Assignment Operators - Hope You Never Grow Old </title>
+    <title> Java复合赋值运算符(Compound Assignment Operators) - Hope You Never Grow Old </title>
   </head>
 
   <body>
@@ -130,7 +130,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          Compound Assignment Operators
+          Java复合赋值运算符(Compound Assignment Operators)
         
       </h1>
 
@@ -143,7 +143,10 @@
 
     
             <div class="post-content">
-            <p>首先看一段代码：</p>
+            <p>简单介绍Java复合赋值运算符（<code>+= -= *= /+ &gt;= &gt;&gt;&gt;= |= &amp;=</code>）中的类型转换。</p>
+<a id="more"></a>
+
+<p>首先看一段代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">10</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> j = <span class="number">100</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">i = i + j; <span class="comment">//compiling error: incompatible types: possible lossy conversion from long to int</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">i += j; <span class="comment">//correct.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">System.out.println(i);</span></pre></td></tr></table></figure>
 <p>很多人（包括我自己）都简单的把 <code>i += j</code> 理解为 <code>i = i + j</code>，那么为什么会出现上面的问题呢？这就得从java规范里，对<code>+=</code>这类复合赋值运算符的定义了。</p>
 <h4 id="什么是-复合赋值运算符-Compound-Assignment-Operators-？"><a href="#什么是-复合赋值运算符-Compound-Assignment-Operators-？" class="headerlink" title="什么是==复合赋值运算符==(Compound Assignment Operators)？"></a>什么是==复合赋值运算符==(Compound Assignment Operators)？</h4><p>简单来讲，就是运算加赋值，譬如：<br><code>+= -= *= /+ &gt;= &gt;&gt;&gt;= |= &amp;=</code>，统一称为<code>op=</code>.在Java规范里,这种运算符的效果是什么呢？<br>假设两个变量，A，B，类型分别为TA，TB（当然可能是相同的类型），那么<br><code>A op= B</code> 等效于<code>A = (TA)(A op B)</code>.<br>这样回头去看上面的代码，就很清楚问题的原因了：<br><code>i + j</code> 由于类型的自动提升，结果为<code>long</code>类型，自然 <code>i = i + j</code>把<code>long</code>类型的值赋给<code>int</code>类型的变量会出错。而<code>i += j</code>等效于<code>i = (int)(i + j)</code>,对<code>long</code>类型的值做了强制转换(cast to int).</p>
@@ -167,8 +170,8 @@
       </a>
     
     
-      <a class="next" href="/2018/12/25/java/Hello-java/">
-        <span class="next-text nav-default">Something about java</span>
+      <a class="next" href="/2012/02/28/When-You-Are-Old/">
+        <span class="next-text nav-default">当你老了</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
