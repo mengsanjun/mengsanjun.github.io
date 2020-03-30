@@ -618,7 +618,7 @@ h6 {
       font-family: "Open Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "Microsoft Jhenghei", sans-serif;
       background: #F8F8F8; }
     .post .post-content code {
-      padding: 3px 5px;
+      padding: 3px 3px;
       color: #000; }
     .post .post-content .highlight {
       margin: 1em 0;
@@ -631,57 +631,20 @@ h6 {
           top: 0;
           right: 0;
           left: 0;
-          padding: 2px 7px;
+          padding: 2px 3px;
           font-size: 13px;
           font-weight: bold;
           color: #cacaca;
-          background: #f0f0f0;
-          content: 'Code'; }
-      .post .post-content .highlight.html > ::after {
-        content: "HTML"; }
-      .post .post-content .highlight.js > ::after {
-        content: "JavaScript"; }
-      .post .post-content .highlight.bash > ::after {
-        content: "Bash"; }
-      .post .post-content .highlight.css > ::after {
-        content: "CSS"; }
-      .post .post-content .highlight.scss > ::after {
-        content: "Scss"; }
-      .post .post-content .highlight.java > ::after {
-        content: "Java"; }
-      .post .post-content .highlight.xml > ::after {
-        content: "XML"; }
-      .post .post-content .highlight.python > ::after {
-        content: "Python"; }
-      .post .post-content .highlight.json > ::after {
-        content: "JSON"; }
-      .post .post-content .highlight.swift > ::after {
-        content: "Swift"; }
-      .post .post-content .highlight.ruby > ::after {
-        content: "Ruby"; }
-      .post .post-content .highlight.php > ::after {
-        content: "PHP"; }
-      .post .post-content .highlight.c > ::after {
-        content: "C"; }
-      .post .post-content .highlight.cpp > ::after {
-        content: "C++"; }
-      .post .post-content .highlight.scheme > ::after {
-        content: "Scheme"; }
-      .post .post-content .highlight.objectivec > ::after {
-        content: "Objective-C"; }
-      .post .post-content .highlight.yml > ::after {
-        content: "YAML"; }
-      .post .post-content .highlight.stylus > ::after {
-        content: "Stylus"; }
+          background: #f0f0f0; }
       .post .post-content .highlight .code pre {
         margin: 0;
-        padding: 30px 10px 10px; }
+        padding: 2px 2px 2px; }
       .post .post-content .highlight .gutter {
         width: 10px;
         color: #cacaca; }
         .post .post-content .highlight .gutter pre {
           margin: 0;
-          padding: 30px 7px 10px; }
+          padding: 2px 2px 2px; }
       .post .post-content .highlight .line {
         height: 20px; }
       .post .post-content .highlight table, .post .post-content .highlight tr, .post .post-content .highlight td {
