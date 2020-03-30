@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="关于guava之LoadingCache的一点"/>
+
+
+
+
+  <meta name="keywords" content="guava,Optional," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Hope You Never Grow Old">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://clclcl.fun/2020/03/28/java/LoadingCache-null-value/"/>
+
+
+<meta name="description" content="Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用的一点注意事项。ifeve.com有翻译cache相关的介绍，在++这里++ 使用Cache时，我们优先读取缓存，当缓存不存在时，则从实际的数据存储获取，如DB、磁盘、网络等，即get-if-absent-compute。guava提供了Cac">
+<meta name="keywords" content="guava,Optional">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于guava之LoadingCache的一点">
+<meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2020&#x2F;03&#x2F;28&#x2F;java&#x2F;LoadingCache-null-value&#x2F;">
+<meta property="og:site_name" content="Hope You Never Grow Old">
+<meta property="og:description" content="Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用的一点注意事项。ifeve.com有翻译cache相关的介绍，在++这里++ 使用Cache时，我们优先读取缓存，当缓存不存在时，则从实际的数据存储获取，如DB、磁盘、网络等，即get-if-absent-compute。guava提供了Cac">
+<meta property="og:locale" content="cn">
+<meta property="og:updated_time" content="2020-03-28T03:01:00.000Z">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 关于guava之LoadingCache的一点 - Hope You Never Grow Old </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Hope You Never Grow Old</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="mailto:hi@clclcl.fun">
+                            
+                            
+                                Email
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                <a id="high-header" style="cursor:pointer"> High一下</a>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          关于guava之LoadingCache的一点
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 28 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用的一点注意事项。<br>ifeve.com有翻译cache相关的介绍，在<a href="http://ifeve.com/google-guava-cachesexplained/" target="_blank" rel="noopener"><strong>++这里++</strong></a></p>
+<p>使用Cache时，我们优先读取缓存，当缓存不存在时，则从实际的数据存储获取，如DB、磁盘、网络等，即get-if-absent-compute。guava提供了CacheLoader机制，允许我们通过设置Loader来自动完成这一过程。如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Cache&lt;String, User&gt; cache = CacheBuilder.newBuilder().expireAfterAccess(<span class="number">5</span>, TimeUnit.MINUTES);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">user = cache.get(name, () -&gt; &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    User value = query(key);<span class="comment">//from databse, disk, etc.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> value;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">&#125;);</span></pre></td></tr></table></figure>
+<p>或者使用LoadingCache:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"> LoadingCache&lt;String, User&gt; cache = CacheBuilder.newBuilder().expireAfterAccess(<span class="number">5</span>, TimeUnit.MINUTES).build(</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">     <span class="keyword">new</span> CacheLoader&lt;String, User&gt;() &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">        <span class="meta">@Override</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        <span class="function"><span class="keyword">public</span> User <span class="title">load</span><span class="params">(String name)</span> <span class="keyword">throws</span> Exception </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        User value = query(key);<span class="comment">//from databse, disk, etc.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> value;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">);</span></pre></td></tr></table></figure>
+
+<p>这可比自己写一个Map来缓存数据方便多了，而且还可以设置超时时间自动帮我们清理过期的数据。  </p>
+<p>不过需要注意一点的是，CacheLoader不允许返回的数据为NULL，否则会抛出异常：<code>CacheLoader returned null for key</code>。所以我们需要保证查找的数据必须存在，或者抛出异常外部处理。在某些情况下，我们的数据可能确实不在，比如用户管理模块，我们在新增数据前，要查询原来是否已经存在该用户，那么这时候抛出异常也不合适，此时可以使用Optional来优化CacheLoader：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"> LoadingCache&lt;String, Optional&lt;User&gt;&gt; cache = CacheBuilder.newBuilder().expireAfterAccess(<span class="number">5</span>, TimeUnit.MINUTES).build(</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">     <span class="keyword">new</span> CacheLoader&lt;String, Optional&lt;User&gt;&gt;() &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">        <span class="meta">@Override</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        <span class="function"><span class="keyword">public</span> Optional&lt;User&gt; <span class="title">load</span><span class="params">(String name)</span> <span class="keyword">throws</span> Exception </span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">        User value = query(key);<span class="comment">//from databse, disk, etc.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">return</span> Optional.ofNullable(value);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">);</span></pre></td></tr></table></figure>
+<p>这样我们保证了CacheLoader返回值不为NULL，而业务数据是否存在，只需要判断Optional.ifPresent()就行了，同时Optional的其他函数在业务逻辑中也是非常有用的。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/guava/">guava</a>
+		  
+			<a href="/tags/Optional/">Optional</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/03/25/life/JILIAO/">
+        <span class="next-text nav-default">鸡里奥宝典</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon">
+
+<span class="copyright-year">
+	<span>Original articles on this site are CC 
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode" target="_blank" rel="noopener">BY-NC-SA</a> 
+licensed unless otherwise stated.</span>
+
+<br>
+
+    <small class="power-by">
+        Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> and <a href="https://github.com/frostfan/hexo-theme-polarbear" target="_blank" rel="noopener">Polar Bear</a>
+    </small>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+    
+<script type="text/javascript" src="/resource/high.js?v=1.1"></script>
+
+  </body>
+</html>
