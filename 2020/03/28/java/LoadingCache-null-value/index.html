@@ -12,12 +12,12 @@
 
 
 
-  <meta name="description" content="关于guava之LoadingCache的一点"/>
+  <meta name="description" content="优雅处理guava之LoadingCache NULL值问题"/>
 
 
 
 
-  <meta name="keywords" content="guava,Optional," />
+  <meta name="keywords" content="技术人生,guava,Optional," />
 
 
 
@@ -35,13 +35,13 @@
 <link rel="canonical" href="https://clclcl.fun/2020/03/28/java/LoadingCache-null-value/"/>
 
 
-<meta name="description" content="Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用的一点注意事项。ifeve.com有翻译cache相关的介绍，在这里。 使用Cache时，我们优先读取缓存，当缓存不存在时，则从实际的数据存储获取，如DB、磁盘、网络等，即get-if-absent-compute。guava提供了CacheL">
-<meta name="keywords" content="guava,Optional">
+<meta name="description" content="Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用时，对于不存在的值如何优雅处理。ifeve.com有翻译cache相关的介绍，在这里。">
+<meta name="keywords" content="技术人生,guava,Optional">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于guava之LoadingCache的一点">
+<meta property="og:title" content="优雅处理guava之LoadingCache NULL值问题">
 <meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2020&#x2F;03&#x2F;28&#x2F;java&#x2F;LoadingCache-null-value&#x2F;">
 <meta property="og:site_name" content="Hope You Never Grow Old">
-<meta property="og:description" content="Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用的一点注意事项。ifeve.com有翻译cache相关的介绍，在这里。 使用Cache时，我们优先读取缓存，当缓存不存在时，则从实际的数据存储获取，如DB、磁盘、网络等，即get-if-absent-compute。guava提供了CacheL">
+<meta property="og:description" content="Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用时，对于不存在的值如何优雅处理。ifeve.com有翻译cache相关的介绍，在这里。">
 <meta property="og:locale" content="cn">
 <meta property="og:updated_time" content="2020-03-28T03:01:00.000Z">
 <meta name="twitter:card" content="summary">
@@ -69,7 +69,7 @@
 
 
 
-    <title> 关于guava之LoadingCache的一点 - Hope You Never Grow Old </title>
+    <title> 优雅处理guava之LoadingCache NULL值问题 - Hope You Never Grow Old </title>
   </head>
 
   <body>
@@ -133,7 +133,7 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          关于guava之LoadingCache的一点
+          优雅处理guava之LoadingCache NULL值问题
         
       </h1>
 
@@ -146,7 +146,9 @@
 
     
             <div class="post-content">
-            <p>Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用的一点注意事项。ifeve.com有翻译cache相关的介绍，在<a href="http://ifeve.com/google-guava-cachesexplained/" target="_blank" rel="noopener"><strong>这里</strong></a>。</p>
+            <p>Google的guava是个很好的项目，提供了诸如集合、缓存、并发、String工具类等等，实乃Java开发利器。这里简单说一下LoadingCache使用时，对于不存在的值如何优雅处理。ifeve.com有翻译cache相关的介绍，在<a href="http://ifeve.com/google-guava-cachesexplained/" target="_blank" rel="noopener"><strong>这里</strong></a>。</p>
+<a id="more"></a>
+
 <p>使用Cache时，我们优先读取缓存，当缓存不存在时，则从实际的数据存储获取，如DB、磁盘、网络等，即get-if-absent-compute。guava提供了CacheLoader机制，允许我们通过设置Loader来自动完成这一过程。如：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Cache&lt;String, User&gt; cache = CacheBuilder.newBuilder().expireAfterAccess(<span class="number">5</span>, TimeUnit.MINUTES);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">user = cache.get(name, () -&gt; &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    User value = query(key);<span class="comment">//from databse, disk, etc.</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> value;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#125;);</span></pre></td></tr></table></figure>
 <p>或者使用LoadingCache:</p>
@@ -165,6 +167,8 @@
 		
 		<div class="post-tags">
 		  
+			<a href="/tags/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/">技术人生</a>
+		  
 			<a href="/tags/guava/">guava</a>
 		  
 			<a href="/tags/Optional/">Optional</a>
@@ -176,9 +180,15 @@
         
   <nav class="post-nav">
     
+      <a class="prev" href="/2020/04/17/read/Evils-in-Baiyexing/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">《白夜行》雪穗&亮司作过的恶</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
     
       <a class="next" href="/2020/03/25/life/JILIAO/">
-        <span class="next-text nav-default">鸡里奥宝典</span>
+        <span class="next-text nav-default">腾讯找我玩【鸡里奥宝典】</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>

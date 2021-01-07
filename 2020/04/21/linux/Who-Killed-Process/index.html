@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="description" content="谁Kill了我的进程"/>
+
+
+
+
+  <meta name="keywords" content="技术人生,Linux," />
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Hope You Never Grow Old">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1" />
+
+
+
+<link rel="canonical" href="https://clclcl.fun/2020/04/21/linux/Who-Killed-Process/"/>
+
+
+<meta name="description" content="以前解决一个进程被杀死的问题后写的记录，略作修改，放这里做个记录。">
+<meta name="keywords" content="技术人生,Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="谁Kill了我的进程">
+<meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2020&#x2F;04&#x2F;21&#x2F;linux&#x2F;Who-Killed-Process&#x2F;">
+<meta property="og:site_name" content="Hope You Never Grow Old">
+<meta property="og:description" content="以前解决一个进程被杀死的问题后写的记录，略作修改，放这里做个记录。">
+<meta property="og:locale" content="cn">
+<meta property="og:updated_time" content="2020-04-21T03:01:00.000Z">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'>
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 谁Kill了我的进程 - Hope You Never Grow Old </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Hope You Never Grow Old</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="mailto:hi@clclcl.fun">
+                            
+                            
+                                Email
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                <a id="high-header" style="cursor:pointer"> High一下</a>
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          谁Kill了我的进程
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 21 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>以前解决一个进程被杀死的问题后写的记录，略作修改，放这里做个记录。</p>
+<a id="more"></a>
+<h3 id="故事是这么开始的："><a href="#故事是这么开始的：" class="headerlink" title="故事是这么开始的："></a>故事是这么开始的：</h3><p>某日，一用户现场系统出现故障，有时候会读取数据失败。经过简单的排查，很快开发同事找到原因：服务进程退出，并由systemd重启：</p>
+<blockquote>
+<p>systemd: XXXX.service: main process exited, code=killed, status=9/KILL<br>systemd: Unit XXXX.service entered failed state.<br>systemd: XXXX.service failed.<br>systemd: XXXX.service holdoff time over, scheduling restart.</p>
+</blockquote>
+<p>不过问题定位到这里就进行不下去了：进程被外部Kill -9 杀掉，并且不是因为OOM killer（内存利用率并不高，而且内核日志没有出现任何异常）。该问题一直搁置了一个月，直到最近我转到该组，领导说我在Linux下搞的问题比较多，把问题转给了我让我先研究研究。</p>
+<h3 id="一步一步去追寻真相"><a href="#一步一步去追寻真相" class="headerlink" title="一步一步去追寻真相"></a>一步一步去追寻真相</h3><ol>
+<li><p>从syslog确认，进程是由外部Kill掉的（kill -9），且我对项目完全不熟悉，因此不考虑投入代码层面的分析。转头向操作系统索取信息。</p>
+</li>
+<li><p>众所周知，程序员一个重要的能力就是面向Google编程。同样解决Linux问题也要如此，首先我在StackOverflow搜索了Kill相关问题，得到重要提示：可以使用auditctl或者sysdig来捕获系统调用信息。</p>
+</li>
+<li><p>audit！以前就了解过这个神器，但是却从来没有实战过，因此没什么印象。这时候不禁感叹：纸上得来终觉浅，绝知此事要躬行。</p>
+</li>
+<li><p>了解了audit基本用法，在出问题的环境上执行了如下命令来捕获进程退出的信息：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">auditctl -a exit,always -S kill</span></pre></td></tr></table></figure>
+</li>
+<li><p>幸运的是，这个问题复现概率还是挺高的，当天上午就出现了另一次进程被Kill，从对应的audit log中，找到了发出Kill命令的进程信息(<code>xxxxxx</code>是服务进程名字)：</p>
+<blockquote>
+<p>type=SYSCALL msg=audit(1515310507.002:69421137): arch=c000003e syscall=62 success=yes exit=0 a0=1ed5ef a1=9 a2=0 a3=7ffc76676c60 items=0 <strong>ppid=2049521 pid=2049524</strong> auid=0 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=276169 comm=”sh” exe=”/usr/bin/bash” key=(null)<br>type=OBJ_PID msg=audit(1515310507.002:69421137): <strong>opid=2020847 oauid=-1 ouid=167 oses=-1 ocomm=”xxxxxx”</strong></p>
+</blockquote>
+</li>
+</ol>
+<p>第一行是发出调用命令的进程，第二行是被干掉的进程信息。</p>
+<ol start="6">
+<li>可惜的是，始作俑者已经找不到了，干坏事的进程已经不在了。不过audit还可以把新建进程的信息也记录下来，譬如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">auditctl -a task,always</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">ausearch -i -sc execve</span></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>7.再次等待罪犯下次露面之后，终于发现，是一个Crontab任务搞的鬼。这个定时任务每分钟执行一次，执行一个脚本，目的是找到一些僵尸进程并kill掉，可惜代码有bug，在某些条件下会误操作，kill掉正常的进程。</p>
+<p>8.剩下的事情就简单了，交给运维去找背锅的人就好了。而我，收到了领导安排的另外Linux上服务异常的问题，大概是能者多劳吧 :D（虽然查了很多资料才搞定，感觉很有收获:P）</p>
+<ol start="9">
+<li>下一步要对sysdig audit这些能获取系统信息的神器好好做朋友。说不定哪天有需要他们帮忙了。</li>
+</ol>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/">技术人生</a>
+		  
+			<a href="/tags/Linux/">Linux</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/04/21/linux/Why-Start-Slowly/">
+        <span class="next-text nav-default">这个服务为什么启动这么慢</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon">
+
+<span class="copyright-year">
+	<span>Original articles on this site are CC 
+<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode" target="_blank" rel="noopener">BY-NC-SA</a> 
+licensed unless otherwise stated.</span>
+
+<br>
+
+    <small class="power-by">
+        Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> and <a href="https://github.com/frostfan/hexo-theme-polarbear" target="_blank" rel="noopener">Polar Bear</a>
+    </small>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+    
+<script type="text/javascript" src="/resource/high.js?v=1.1"></script>
+
+  </body>
+</html>

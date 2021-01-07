@@ -12,12 +12,12 @@
 
 
 
-  <meta name="description" content="腾讯找我玩【鸡里奥宝典】"/>
+  <meta name="description" content="这个服务为什么启动这么慢"/>
 
 
 
 
-  <meta name="keywords" content="游戏,生活日常," />
+  <meta name="keywords" content="技术人生,Linux," />
 
 
 
@@ -32,19 +32,23 @@
 
 
 
-<link rel="canonical" href="https://clclcl.fun/2020/03/25/life/JILIAO/"/>
+<link rel="canonical" href="https://clclcl.fun/2020/04/21/linux/Why-Start-Slowly/"/>
 
 
-<meta name="description" content="记录一点点生活感悟，商家各种花里胡哨的活动，我也上当了一回。 :P">
-<meta name="keywords" content="游戏,生活日常">
+<meta name="description" content="一个工作中的案例，使用systemd工具，分析服务启动时间。">
+<meta name="keywords" content="技术人生,Linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="腾讯找我玩【鸡里奥宝典】">
-<meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2020&#x2F;03&#x2F;25&#x2F;life&#x2F;JILIAO&#x2F;">
+<meta property="og:title" content="这个服务为什么启动这么慢">
+<meta property="og:url" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;2020&#x2F;04&#x2F;21&#x2F;linux&#x2F;Why-Start-Slowly&#x2F;">
 <meta property="og:site_name" content="Hope You Never Grow Old">
-<meta property="og:description" content="记录一点点生活感悟，商家各种花里胡哨的活动，我也上当了一回。 :P">
+<meta property="og:description" content="一个工作中的案例，使用systemd工具，分析服务启动时间。">
 <meta property="og:locale" content="cn">
-<meta property="og:updated_time" content="2020-03-25T03:01:00.000Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;resource&#x2F;pic1&#x2F;systemd1.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;resource&#x2F;pic1&#x2F;systemd2.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;resource&#x2F;pic1&#x2F;systemd3.png">
+<meta property="og:updated_time" content="2020-04-21T03:01:00.000Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;clclcl.fun&#x2F;resource&#x2F;pic1&#x2F;systemd1.png">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1" />
@@ -69,7 +73,7 @@
 
 
 
-    <title> 腾讯找我玩【鸡里奥宝典】 - Hope You Never Grow Old </title>
+    <title> 这个服务为什么启动这么慢 - Hope You Never Grow Old </title>
   </head>
 
   <body>
@@ -133,12 +137,12 @@
     <header class="post-header">
       <h1 class="post-title">
         
-          腾讯找我玩【鸡里奥宝典】
+          这个服务为什么启动这么慢
         
       </h1>
 
       <time class="post-time">
-          Mar 25 2020
+          Apr 21 2020
       </time>
     </header>
 
@@ -146,18 +150,17 @@
 
     
             <div class="post-content">
-            <p>记录一点点生活感悟，商家各种花里胡哨的活动，我也上当了一回。 :P</p>
+            <p>一个工作中的案例，使用systemd工具，分析服务启动时间。</p>
 <a id="more"></a>
-
-<p>疫情期间，腾讯可能是怕大家太无聊了，推出了“鸡里奥宝典”的活动。官方称79元开启宝典就可以得到几百块钱的皮肤和其他奖励。有这么便宜的事情，脑子一热我就买了79的门票开启了活动。再看活动规则，通过打游戏奖励积分升级，每一级都有对应的奖励，满100级则奖励至臻版的剑魔皮肤，这玩意儿可是值几百块呢。我这个一激动，开始肝起来了。</p>
-<p>不过因为白天要上班，下班后还要陪娃，每天只能临睡前很晚玩几把，有一个周末老婆带孩子回老家，我独自在家，小区又不让出，就一连玩了两天游戏来做任务，玩到自己有点要吐了。再之后断断续续玩，至今活动马上结束了，离达成满级还差得远，一下就放弃了，回过头来看自己的所作所为，不禁暗自发笑。</p>
-<p>每次超市或者网上有什么大降价的活动，老婆要买买买的时候，我总是跟她说：如果是需要的东西，大概我们平时已经买了。如果不需要的东西，及时再便宜，也等于买了一堆废物。买东西的时候不要因为贪图便宜而忽视了自己的真实需求。所以那些双十一、双十二的节日我基本上没有关注过，总感觉那样是被生活左右着。</p>
-<p>现在回头看，自己这次也是脑子一热做出了自己以前所不赞成之事。为了所谓的奖励，好几个晚上睡得很迟，还浪费了一个周末。更主要的是，这些奖励是我需要的吗？值得吗？答案是否定的，奖励的系列皮肤对应的英雄我从来不玩，那些皮肤在我看来也并不好看，只是因为79可以得到几百块的奖励，便忘掉了游戏只是偶尔来放松一下，于是乎丢掉了游戏的乐趣，花费大量时间来刷等级。如果这些时间用来休息，陪家人或者看书，甚至是看看电影听听歌，也有意义的多。</p>
-<p>韩寒的《后会无期》是一部给文艺青年看的电影，虽然装B成分居多（韩导自己也称其台词没有太多意义只是为了押韵:D），不过有一句话确实大实话：【我听过很多的道理，却仍旧过不好这一生】。平时我自诩对人对生活看得很透，可实际上讲道理谁都会，可是自己做起来阿，确实很难。</p>
-<p>最后呢送给自己一句话，也是章北海问父亲在末日战争之前自己该如何做：</p>
+<h3 id="先描述一下问题："><a href="#先描述一下问题：" class="headerlink" title="先描述一下问题："></a>先描述一下问题：</h3><p>在一套测试环境中，小明要验证可靠性，就把一台物理机重启了，却发现系统启动后，WEB页面很久都打不开。小明又重启了其他的主机，发现只有2台主机有这个现象，而且是必现的。</p>
+<p>从我们的项目日志分析，确实在系统启动30多分钟后，我们的服务才正常运行，同时也发现，我们的服务开始启动，已经是系统启动30分钟后了，那么问题就在于，为什么这个服务，这么晚才开始启动呢？</p>
+<h3 id="再解决一下问题："><a href="#再解决一下问题：" class="headerlink" title="再解决一下问题："></a>再解决一下问题：</h3><p>我们的项目部署在Centos7.5上，由systemd托管服务的生老病死。因此考虑从systemd的日志查看，果然，系统启动后30分钟，才开始启动我们的服务，而我们的服务实际启动非常快。那么这之前，systemd在干嘛呢？</p>
+<p>这时候，systemd-analyze可以派上用场了，分析systemd的官方神器。</p>
 <blockquote>
-<p>“北海，我只能告诉你那以前要多想。”父亲回答。</p>
+<p>systemd-analyze blame  # 这个看每个服务启动时间，从长到短。<br>systemd-analyze plot &gt; /root/sys-plot.svg  #这个是服务启动时序图，可以用浏览器打开。<br>systemd-analyze critical-chain atd.service # 单个服务启动信息</p>
 </blockquote>
+<p>从结果我们很明显的看出，linux启动后，首先启动了1号进程 systemd（以前是initd），由systemd负责所有其他进程的管理：<br><img src="/resource/pic1/systemd1.png" alt="systemd1"><br>systemd首先启动了linux内核（kernel, initrd）。<br><img src="/resource/pic1/systemd2.png" alt="systemd1"><br>然后按照顺序启动systemd配置的服务单元。优先级较高的有网络、文件服务、时间同步等等。<br><img src="/resource/pic1/systemd3.png" alt="systemd1"><br>然后再启动应用层的服务。而在我们的服务启动前，iscsi服务启动耗费了30分钟，阻塞了后续服务的启动。</p>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p>检查iSCSI配置发现，有测试人员在两台主机上配置了iSCSI存储，而对应的存储服务端的环境已经拆掉了。导致iSCSI启动尝试发现存储时一直失败重试，直到30分钟超时失败。<br>修改完配置后，重启主机一切恢复正常。</p>
 
             </div>
           
@@ -167,9 +170,9 @@
 		
 		<div class="post-tags">
 		  
-			<a href="/tags/%E6%B8%B8%E6%88%8F/">游戏</a>
+			<a href="/tags/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/">技术人生</a>
 		  
-			<a href="/tags/%E7%94%9F%E6%B4%BB%E6%97%A5%E5%B8%B8/">生活日常</a>
+			<a href="/tags/Linux/">Linux</a>
 		  
 		</div>
 		
@@ -178,15 +181,15 @@
         
   <nav class="post-nav">
     
-      <a class="prev" href="/2020/03/28/java/LoadingCache-null-value/">
+      <a class="prev" href="/2020/04/21/linux/Who-Killed-Process/">
         <i class="iconfont icon-left"></i>
-        <span class="prev-text nav-default">优雅处理guava之LoadingCache NULL值问题</span>
+        <span class="prev-text nav-default">谁Kill了我的进程</span>
         <span class="prev-text nav-mobile">Prev</span>
       </a>
     
     
-      <a class="next" href="/2020/01/06/Avoid-Talking-Politics/">
-        <span class="next-text nav-default">为什么不谈政治</span>
+      <a class="next" href="/2020/04/17/read/Evils-in-Baiyexing/">
+        <span class="next-text nav-default">《白夜行》雪穗&亮司作过的恶</span>
         <span class="prev-text nav-mobile">Next</span>
         <i class="iconfont icon-right"></i>
       </a>
